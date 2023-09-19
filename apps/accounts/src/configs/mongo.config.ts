@@ -5,7 +5,8 @@ export function getMongoConfig(): MongooseModuleAsyncOptions {
   return {
     useFactory: (configService: ConfigService) => {
       return {
-        uri: configService.get("MONGO_URI")
+        uri: configService.get("MONGO_URI"),
+        dbName: 'accounts'
       };
     },
     inject: [ConfigService],

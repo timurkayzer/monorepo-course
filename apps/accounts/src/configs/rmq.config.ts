@@ -1,19 +1,19 @@
 import { ConfigService } from "@nestjs/config";
-import { IRMQServiceAsyncOptions } from "nestjs-rmq";
+import { IRMQServiceOptions } from "nestjs-rmq";
 
-export const getRmqConfig = (): IRMQServiceAsyncOptions => ({
+export const getRmqConfig = (): any => ({
   inject: [ConfigService],
-  useFactory: (configService: ConfigService) => {
+  useFactory: (configService: ConfigService): IRMQServiceOptions => {
     return {
-      exchangeName: configService.get('AMQP_EXCHANGE'),
+      exchangeName: <string>configService.get('AMQP_EXCHANGE'),
       connections: [
         {
-          host: configService.get('AMQP_HOST'),
-          login: configService.get('AMQP_LOGIN'),
-          password: configService.get('AMQP_PASSWORD'),
+          host: <string>configService.get('AMQP_HOST'),
+          login: <string>configService.get('AMQP_LOGIN'),
+          password: <string>configService.get('AMQP_PASSWORD'),
         }
       ],
-      queueName: configService.get('AMQP_QUEUE'),
+      queueName: <string>configService.get('AMQP_QUEUE'),
       prefetchCount: 33,
       serviceName: 'accounts'
     };

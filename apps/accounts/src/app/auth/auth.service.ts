@@ -27,7 +27,7 @@ export class AuthService {
       passwordHash: ''
     });
 
-    userEntity.setPassword(password);
+    await userEntity.setPassword(password);
 
     return this.userRepository.createUser(userEntity);
   }

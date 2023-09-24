@@ -1,5 +1,5 @@
 import { AccountLogin, AccountRegister } from "@courses/contracts";
-import { Body, Controller, Post, UnauthorizedException, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Logger, Post, UsePipes, ValidationPipe } from "@nestjs/common";
 import { RMQService } from "nestjs-rmq";
 import { LoginDto } from "../dto/login.dto";
 import { RegisterDto } from "../dto/register.dto";
@@ -20,7 +20,8 @@ export class AuthController {
       return await this.rmqService.send<AccountLogin.Request, AccountLogin.Response>(AccountLogin.topic, dto);
     }
     catch (e) {
-      throw new UnauthorizedException(e?.message);
+      Logger.error("Error while logging in:" + e?.toString());
+      throw e;
     }
   }
 
@@ -31,7 +32,8 @@ export class AuthController {
       return await this.rmqService.send<AccountRegister.Request, AccountRegister.Response>(AccountRegister.topic, dto);
     }
     catch (e) {
-      throw new UnauthorizedException(e?.message);
+      Logger.error("Error while registering:" + e?.toString());
+      throw e;
     }
   }
 

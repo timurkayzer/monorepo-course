@@ -1,8 +1,9 @@
-import { InjectModel } from "@nestjs/mongoose";
-import { User } from "../models/user.model";
-import { Model } from "mongoose";
+import { IUser } from "@courses/interfaces";
 import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
 import { UserEntity } from "../entities/user.entity";
+import { User } from "../models/user.model";
 
 @Injectable()
 export class UserRepository {
@@ -18,7 +19,15 @@ export class UserRepository {
     return await this.userModel.findOne({ email });
   }
 
+  async findUserById(id: string): Promise<Omit<User, 'passwordHash'>> {
+    return await this.userModel.findById(id).projection({ passwordHash: 0 }) as Omit<User, 'passwordHash'>;
+  }
+
   async deleteUser(email: string) {
     return await this.userModel.deleteOne({ email });
+  }
+
+  async updateUser(id: string, user: Partial<IUser>) {
+    return await this.userModel.updateOne({ _id: id }, user);
   }
 }

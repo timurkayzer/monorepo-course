@@ -9,4 +9,17 @@ export interface IUser {
   email: string;
   passwordHash: string;
   role: UserRole;
+  courses?: IUserCourse[];
+}
+
+export interface IUserCourse {
+  courseId: string;
+  purchaseState: PurchaseState;
+}
+
+export enum PurchaseState {
+  Started = 'Started',
+  WaitingForPayment = 'WaitingForPayment',
+  Purchased = 'Purchased',
+  Canceled = 'Canceled'
 }

@@ -9,7 +9,7 @@ export class UserEntity implements IUser {
   role: UserRole;
   courses?: IUserCourse[];
 
-  constructor(user: IUser) {
+  constructor(user: Omit<IUser, 'passwordHash'> & { passwordHash?: string; }) {
     this._id = user._id;
     this.displayName = user.displayName;
     this.passwordHash = user.passwordHash || '';
@@ -25,5 +25,9 @@ export class UserEntity implements IUser {
 
   public async validatePassword(password: string) {
     return await compare(password, this.passwordHash);
+  }
+
+  public updateProfile(user: Partial<IUser>): void {
+
   }
 }

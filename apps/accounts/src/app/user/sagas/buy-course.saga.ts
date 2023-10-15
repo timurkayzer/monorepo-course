@@ -2,7 +2,10 @@ import { PurchaseState } from "@courses/interfaces";
 import { RMQService } from "nestjs-rmq";
 import { UserEntity } from "../entities/user.entity";
 import { BuyCourseSagaState } from "./buy-course.state";
-import { BuyCourseSagaStateStarted } from "./buy-course.steps";
+import { BuyCourseSagaStateCanceled } from "./steps/buy-course.canceled.steps";
+import { BuyCourseSagaStatePayment } from "./steps/buy-course.payment.steps";
+import { BuyCourseSagaStatePurchased } from "./steps/buy-course.purchased.steps";
+import { BuyCourseSagaStateStarted } from "./steps/buy-course.started.steps";
 
 
 export class BuyCourseSaga {
@@ -16,13 +19,13 @@ export class BuyCourseSaga {
         this.state = new BuyCourseSagaStateStarted();
         break;
       case PurchaseState.Canceled:
-
+        this.state = new BuyCourseSagaStateCanceled();
         break;
       case PurchaseState.WaitingForPayment:
-
+        this.state = new BuyCourseSagaStatePayment();
         break;
       case PurchaseState.Purchased:
-
+        this.state = new BuyCourseSagaStatePurchased();
         break;
     }
 

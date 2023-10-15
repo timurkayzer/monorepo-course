@@ -1,7 +1,7 @@
-import { CourseGetCourse, PaymentGenerateLink } from "@courses/contracts";
+import { CourseGetCourse, PaymentGenerateLink, PaymentStatus } from "@courses/contracts";
 import { PurchaseState } from "@courses/interfaces";
-import { UserEntity } from "../entities/user.entity";
-import { BuyCourseSagaState } from "./buy-course.state";
+import { UserEntity } from "../../entities/user.entity";
+import { BuyCourseSagaState } from "../buy-course.state";
 
 export class BuyCourseSagaStateStarted extends BuyCourseSagaState {
   public async pay(): Promise<{ paymentLink: string; user: UserEntity; }> {
@@ -24,7 +24,7 @@ export class BuyCourseSagaStateStarted extends BuyCourseSagaState {
 
     return { paymentLink: link, user: this.saga.user };
   }
-  public checkPayment(): Promise<{ user: UserEntity; }> {
+  public checkPayment(): Promise<{ user: UserEntity; status: PaymentStatus; }> {
     throw new Error("Нельзя проверить платеж, который не был проведен");
   }
   public async cancelPayment(): Promise<{ user: UserEntity; }> {

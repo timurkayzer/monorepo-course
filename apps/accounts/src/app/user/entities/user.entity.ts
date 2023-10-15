@@ -23,22 +23,18 @@ export class UserEntity implements IUser {
     return this;
   }
 
-  public addCourse(courseId: string): void {
+  public updateCourseState(courseId: string, state: PurchaseState) {
     if (this.courses.findIndex(c => c.courseId === courseId) !== -1) {
-      throw new Error("Course already added");
+      this.courses.push({
+        courseId: courseId,
+        purchaseState: state
+      });
     }
 
-    this.courses.push({
-      courseId,
-      purchaseState: PurchaseState.WaitingForPayment
-    });
-  }
+    if (state === PurchaseState.Canceled) {
+      this.courses = this.courses.filter(c => courseId !== c.courseId);
+    }
 
-  public deleteCourse(courseId: string): void {
-    this.courses = this.courses.filter(c => courseId !== c.courseId);
-  }
-
-  public updateCourseState(courseId: string, state: PurchaseState): void {
     this.courses = this.courses.map(c => {
       if (c.courseId === courseId) {
         c.purchaseState = state;
@@ -46,6 +42,8 @@ export class UserEntity implements IUser {
 
       return c;
     });
+
+    return this;
   }
 
   public async validatePassword(password: string) {

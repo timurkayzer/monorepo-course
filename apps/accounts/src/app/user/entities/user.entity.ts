@@ -1,4 +1,5 @@
-import { IUser, IUserCourse, PurchaseState, UserRole } from "@courses/interfaces";
+import { AccountChangedCourse } from "@courses/contracts";
+import { IDomainEvent, IUser, IUserCourse, PurchaseState, UserRole } from "@courses/interfaces";
 import { compare, genSalt, hash } from 'bcryptjs';
 
 export class UserEntity implements IUser {
@@ -8,6 +9,7 @@ export class UserEntity implements IUser {
   passwordHash: string;
   role: UserRole;
   courses?: IUserCourse[];
+  events: IDomainEvent[];
 
   constructor(user: Omit<IUser, 'passwordHash'> & { passwordHash?: string; }) {
     this._id = user._id;
@@ -15,6 +17,7 @@ export class UserEntity implements IUser {
     this.passwordHash = user.passwordHash || '';
     this.email = user.email;
     this.courses = user.courses;
+    this.events = [];
   }
 
   public async setPassword(password: string) {
@@ -41,6 +44,15 @@ export class UserEntity implements IUser {
       }
 
       return c;
+    });
+
+    this.events.push({
+      topic: AccountChangedCourse.topic,
+      data: <AccountChangedCourse.Request>{
+        courseId,
+        status: state,
+        userId: this._id
+      }
     });
 
     return this;

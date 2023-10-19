@@ -3,7 +3,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './models/user.model';
 import { UserRepository } from './repositories/user.repository';
 import { UserCommands } from './user.commands';
+import { UserEventEmitter } from './user.eventemitter';
 import { UserQueries } from './user.queries';
+import { UserService } from './user.service';
 
 @Module({
   imports: [
@@ -15,7 +17,9 @@ import { UserQueries } from './user.queries';
     ])
   ],
   providers: [
-    UserRepository
+    UserRepository,
+    UserEventEmitter,
+    UserService
   ],
   exports: [
     UserRepository,
